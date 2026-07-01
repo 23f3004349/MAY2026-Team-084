@@ -25,7 +25,12 @@ def create_app():
 
     db.init_app(app)
     JWTManager(app)
-    CORS(app)
+  
+
+    CORS(
+    app,
+    resources={r"/api/*": {"origins": "http://localhost:5173"}},
+    )
 
     #  register all blueprints
     app.register_blueprint(auth_bp,        url_prefix="/api/auth")
@@ -40,7 +45,7 @@ def create_app():
     app.register_blueprint(health_bp,      url_prefix="/api/health")
     app.register_blueprint(conflicts_bp,   url_prefix="/api/conflicts")
     app.register_blueprint(parking_bp,     url_prefix="/api/parking")
-
+    
     with app.app_context():
         db.create_all()
 
