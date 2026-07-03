@@ -67,27 +67,23 @@
             </div>
 
             <div class="form-group">
-              <label for="address" class="form-label">Address</label>
-              <input 
-                id="address" 
-                v-model="form.address" 
-                type="text" 
+              <label for="role" class="form-label">Role</label>
+              <select 
+                id="role" 
+                v-model="form.role" 
                 class="form-input" 
-                placeholder="Enter your address"
                 required 
-              />
-            </div>
-
-            <div class="form-group">
-              <label for="pin_code" class="form-label">Pin Code</label>
-              <input 
-                id="pin_code" 
-                v-model="form.pin_code" 
-                type="text" 
-                class="form-input" 
-                placeholder="Enter your pin code"
-                required 
-              />
+              >
+                <option value="">Select a role</option>
+                <option value="ADMIN">Admin</option>
+                <option value="TENANT">Tenant</option>
+                <option value="OWNER">Owner</option>
+                <option value="TREASURER">Treasurer</option>
+                <option value="WORKER">Worker</option>
+                <option value="COMMITTEE_MEMBER">Committee Member</option>
+                <option value="AUDITOR">Auditor</option>
+                <option value="SYSTEM_ADMIN">System Admin</option>
+              </select>
             </div>
 
             <div v-if="error" class="alert alert-error">
@@ -124,8 +120,7 @@ const form = reactive({
   username: '', 
   full_name: '', 
   password: '', 
-  address: '', 
-  pin_code: '' 
+  role: 'TENANT' 
 })
 const loading = ref(false)
 const error = ref('')
@@ -138,7 +133,7 @@ async function submit() {
     success.value = ''
     loading.value = true
 
-    if (!form.username || !form.full_name || !form.password || !form.address || !form.pin_code) {
+    if (!form.username || !form.full_name || !form.password || !form.role) {
         error.value = 'Please fill in all required fields.'
         loading.value = false
         return
@@ -151,22 +146,21 @@ async function submit() {
     }
 
     try {
-        const res = await axios.post(`${getApiBase()}/api/register`, {
-            username: form.username,
-            full_name: form.full_name,
+        const res = await axios.post(`${getApiBase()}/api/auth/register`, {
+            name: form.full_name,
+            email: form.username,
             password: form.password,
-            address: form.address,
-            pin_code: form.pin_code
+            role: form.role
         }, { headers: { 'Content-Type': 'application/json' } })
 
-        if (res.status === 201 || res.data?.msg) {
-            success.value = res.data?.msg || 'Account created successfully! Redirecting to login...'
+        if (res.status === 201 || res.data?.message) {
+            success.value = res.data?.message || 'Account created successfully! Redirecting to login...'
             setTimeout(() => { router.push('/login') }, 1500)
         } else {
             error.value = 'Registration failed.'
         }
     } catch (err) {
-        error.value = err.response?.data?.msg || err.response?.data?.message || err.message || 'Registration failed.'
+        error.value = err.response?.data?.error || err.message || 'Registration failed.'
     } finally {
         loading.value = false
     }
@@ -272,38 +266,6 @@ async function submit() {
   border-radius: 2rem;
 }
 
-.left-section::before {
-  content: '';
-  position: absolute;
-  top: -35%;
-  right: -16%;
-  width: 360px;
-  height: 360px;
-  background: rgba(255, 255, 255, 0.55);
-  border-radius: 50%;
-  animation: float 6s ease-in-out infinite;
-}
-
-.left-section::after {
-  content: '';
-  position: absolute;
-  bottom: -28%;
-  left: -12%;
-  width: 320px;
-  height: 320px;
-  background: rgba(255, 255, 255, 0.45);
-  border-radius: 50%;
-  animation: float 8s ease-in-out infinite reverse;
-}
-
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(30px);
-  }
-}
 
 .background-content {
   position: relative;

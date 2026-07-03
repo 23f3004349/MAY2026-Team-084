@@ -116,26 +116,26 @@ async function submit() {
   error.value = ''
   loading.value = true
   try {
-    const res = await axios.post(`${getApiBase()}/api/login`, {
-      username: form.value.username,
+    const res = await axios.post(`${getApiBase()}/api/auth/login`, {
+      email: form.value.username,
       password: form.value.password
     }, {
-      headers: { 'Content-Type': 'application/json' },
-      withCredentials: true
+      headers: { 'Content-Type': 'application/json' }
     })
 
-    const token = res.data.access_token || res.data.token
-    const role = (res.data.role || '').toLowerCase()
-    if (token) {
-      localStorage.setItem('token', token)
-      localStorage.setItem('role', role)
+    if (res.data.token) {
+      localStorage.setItem('token', res.data.token)
+      localStorage.setItem('user', JSON.stringify(res.data.user))
+      localStorage.setItem('role', res.data.user.role)
+      
+      const role = (res.data.user.role || '').toLowerCase()
       if (role === 'admin') router.push('/admin_dashboard')
       else router.push('/user_dashboard')
     } else {
-      error.value = res.data.msg || 'Login failed'
+      error.value = res.data.message || 'Login failed'
     }
   } catch (err) {
-    error.value = err.response?.data?.msg || err.response?.data?.message || err.message || 'Login failed'
+    error.value = err.response?.data?.error || err.message || 'Login failed'
   } finally {
     loading.value = false
   }
