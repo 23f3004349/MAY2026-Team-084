@@ -6,6 +6,12 @@ export function getAuthToken() {
   return localStorage.getItem('token')
 }
 
+export function getAuthHeader() {
+  const token = getAuthToken()
+  if (!token) return {}
+  return { Authorization: `Bearer ${token}` }
+}
+
 export function setAuthToken(token) {
   if (token) {
     localStorage.setItem('token', token)
