@@ -68,10 +68,6 @@
                 />
               </div>
 
-              <div class="forgot-password">
-                <router-link to="/forgot" class="forgot-link">Forgot your password?</router-link>
-              </div>
-
               <div v-if="error" class="alert alert-error">
                 ✕ {{ error }}
               </div>
@@ -129,7 +125,7 @@ async function submit() {
       localStorage.setItem('role', res.data.user.role)
       
       const role = (res.data.user.role || '').toLowerCase()
-      if (role === 'admin') router.push('/admin_dashboard')
+      if (role === 'admin') router.push('/associate_manager')
       else router.push('/user_dashboard')
     } else {
       error.value = res.data.message || 'Login failed'
