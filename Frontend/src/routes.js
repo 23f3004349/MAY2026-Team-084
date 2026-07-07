@@ -5,6 +5,14 @@ import RegisterPage from "./components/RegisterPage.vue";
 import AssociationManager from "./components/AssociationManager.vue";
 import AddAnnouncement from "./components/AddAnnouncement.vue";
 import EditAnnouncement from "./components/EditAnnouncement.vue";
+import Members from "./components/Members.vue";
+import AddMember from "./components/AddMember.vue";
+import EditMember from "./components/EditMember.vue";
+import Associationcomplaint from "./components/Associationcomplaint.vue";
+import ComplaintDetail from "./components/ComplaintDetail.vue";
+import AddComplaint from "./components/AddComplaint.vue";
+import AssociationInvoice from "./components/AssociationInvoice.vue";
+import InvoiceDetail from "./components/InvoiceDetail.vue";
 
 const routes = [
   {
@@ -46,8 +54,54 @@ const routes = [
     name: "EditAnnouncement",
     component: EditAnnouncement,
     props: true
+  },
+  {
+    path: "/members",
+    name: "Members",
+    component: Members
+  },
+  {
+    path: "/add-member",
+    name: "AddMember",
+    component: AddMember
+  },
+  {
+    path: "/edit-member/:id",
+    name: "EditMember",
+    component: EditMember,
+    props: true
   }
-
+  ,
+  {
+    path: "/complaints",
+    name: "Associationcomplaint",
+    component: Associationcomplaint
+  },
+  {
+    path: "/complaints/:id",
+    name: "ComplaintDetail",
+    component: ComplaintDetail,
+    props: true
+  }
+  ,
+  {
+    path: "/add-complaint",
+    name: "AddComplaint",
+    component: AddComplaint
+  }
+  ,
+  {
+    path: "/invoices",
+    name: "AssociationInvoice",
+    component: AssociationInvoice
+  }
+  ,
+  {
+    path: "/invoices/:id/detail",
+    name: "InvoiceDetail",
+    component: InvoiceDetail,
+    props: true
+  }
 ];
 
 const router = createRouter({
