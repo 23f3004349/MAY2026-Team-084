@@ -35,6 +35,14 @@ def add_notice():
     return jsonify(_notice_dict(notice)), 201
 
 
+# GET /api/notices/<id>  get single notice
+@notices_bp.route("/<int:nid>", methods=["GET"])
+@jwt_required()
+def get_notice(nid):
+    notice = Announcement.query.get_or_404(nid)
+    return jsonify(_notice_dict(notice)), 200
+
+
 # PUT /api/notices/<id>  update notice
 @notices_bp.route("/<int:nid>", methods=["PUT"])
 @jwt_required()

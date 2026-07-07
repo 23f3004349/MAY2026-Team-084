@@ -4,6 +4,7 @@ import LoginPage from "./components/LoginPage.vue";
 import RegisterPage from "./components/RegisterPage.vue";
 import AssociationManager from "./components/AssociationManager.vue";
 import AddAnnouncement from "./components/AddAnnouncement.vue";
+import EditAnnouncement from "./components/EditAnnouncement.vue";
 
 const routes = [
   {
@@ -39,6 +40,12 @@ const routes = [
     path: "/add-announcement",
     name: "AddAnnouncement",
     component: AddAnnouncement
+  },
+  {
+    path: "/edit-announcement/:id",
+    name: "EditAnnouncement",
+    component: EditAnnouncement,
+    props: true
   }
 
 ];
