@@ -96,7 +96,7 @@ async function deleteAnnouncement(a) {
   try {
     const auth = getAuthHeader()
     if (!auth.Authorization) { router.push('/login'); return }
-    await axios.delete(`${API_BASE}/api/notices/${a.id}/`, { headers: auth })
+    await axios.delete(`${API_BASE}/api/notices/${a.id}`, { headers: auth })
     await fetchAnnouncements()
   } catch (err) {
     console.error('Failed to delete announcement:', err)
