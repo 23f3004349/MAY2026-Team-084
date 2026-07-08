@@ -13,6 +13,10 @@ import ComplaintDetail from "./components/ComplaintDetail.vue";
 import AddComplaint from "./components/AddComplaint.vue";
 import AssociationInvoice from "./components/AssociationInvoice.vue";
 import InvoiceDetail from "./components/InvoiceDetail.vue";
+import TenantDashboard from "./components/TenantDashboard.vue";
+import TenantComplaint from "./components/TenantComplaint.vue";
+import TenantComplaintDetails from "./components/TenantComplaintDetails.vue";
+import RaiseComplaint from "./components/AddComplaint.vue";
 
 const routes = [
   {
@@ -101,6 +105,47 @@ const routes = [
     name: "InvoiceDetail",
     component: InvoiceDetail,
     props: true
+  },
+  {
+    path: "/tenant-dashboard",
+    name: "TenantDashboard",
+    component: TenantDashboard
+  },
+  {
+    path: "/tenant-complaints",
+    name: "TenantComplaint",
+    component: TenantComplaint
+  },
+  {
+    path: "/tenant-complaints/:id",
+    name: "TenantComplaintDetails",
+    component: TenantComplaintDetails,
+    props: true
+  },
+  {
+    path: "/raise-complaint",
+    name: "RaiseComplaint",
+    component: RaiseComplaint
+  },
+  {
+    path: "/Tenant_dashboard",
+    redirect: "/tenant-dashboard"
+  },
+  {
+    path: "/tenant_dashboard",
+    redirect: "/tenant-dashboard"
+  },
+  {
+    path: "/Tenant_complaints",
+    redirect: "/tenant-complaints"
+  },
+  {
+    path: "/payments",
+    redirect: "/tenant-dashboard"
+  },
+  {
+    path: "/info",
+    redirect: "/tenant-dashboard"
   }
 ];
 
