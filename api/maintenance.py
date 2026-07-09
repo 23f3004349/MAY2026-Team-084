@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from models import db, MaintenanceTask
 from datetime import datetime
-
+from auth.routes import admin_required
 maintenance_bp = Blueprint("maintenance", __name__)
 
 
@@ -16,7 +16,7 @@ def get_tasks():
 
 # POST /api/maintenance  add new task
 @maintenance_bp.route("/", methods=["POST"])
-@jwt_required()
+@admin_required
 def add_task():
     user_id = int(get_jwt_identity())
     data = request.get_json()
@@ -41,7 +41,7 @@ def add_task():
 
 # PUT /api/maintenance/<id>/complete  mark task complete
 @maintenance_bp.route("/<int:tid>/complete", methods=["PUT"])
-@jwt_required()
+@admin_required
 def complete_task(tid):
     task = MaintenanceTask.query.get_or_404(tid)
     task.status = "COMPLETED"
@@ -52,7 +52,7 @@ def complete_task(tid):
 
 # PUT /api/maintenance/<id>  update task
 @maintenance_bp.route("/<int:tid>", methods=["PUT"])
-@jwt_required()
+@admin_required
 def update_task(tid):
     task = MaintenanceTask.query.get_or_404(tid)
     data = request.get_json()
@@ -67,7 +67,7 @@ def update_task(tid):
 
 # DELETE /api/maintenance/<id>  delete task
 @maintenance_bp.route("/<int:tid>", methods=["DELETE"])
-@jwt_required()
+@admin_required
 def delete_task(tid):
     task = MaintenanceTask.query.get_or_404(tid)
     db.session.delete(task)

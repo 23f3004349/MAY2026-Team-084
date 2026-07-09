@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from models import db, Vote, VoteOption, VoteResponse
-
+from auth.routes import admin_required
 polls_bp = Blueprint("polls", __name__)
 
 
@@ -15,7 +15,7 @@ def get_polls():
 
 # POST /api/polls  create poll
 @polls_bp.route("/", methods=["POST"])
-@jwt_required()
+@admin_required
 def create_poll():
     user_id = int(get_jwt_identity())
     data = request.get_json()
@@ -87,7 +87,7 @@ def cast_vote(pid):
 
 # PUT /api/polls/<id>/close  close poll
 @polls_bp.route("/<int:pid>/close", methods=["PUT"])
-@jwt_required()
+@admin_required
 def close_poll(pid):
     poll = Vote.query.get_or_404(pid)
     poll.status = "CLOSED"
@@ -97,7 +97,7 @@ def close_poll(pid):
 
 # DELETE /api/polls/<id>  delete poll
 @polls_bp.route("/<int:pid>", methods=["DELETE"])
-@jwt_required()
+@admin_required
 def delete_poll(pid):
     poll = Vote.query.get_or_404(pid)
     db.session.delete(poll)

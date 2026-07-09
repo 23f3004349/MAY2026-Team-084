@@ -2,6 +2,8 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Numeric
 from datetime import datetime
+from werkzeug.security import generate_password_hash
+
 
  
 db = SQLAlchemy()
@@ -780,7 +782,20 @@ class ParkingSlot(db.Model):
     occupied_by_apartment = db.relationship("Apartment", foreign_keys=[occupied_by_apartment_id])
     updater = db.relationship("User", foreign_keys=[updated_by])
 
-
 with app.app_context():
     db.create_all()
+
+    admin = User.query.filter_by(email="admin@gmail.com").first()
+
+    if not admin:
+        admin = User(
+            name="Administrator",
+            email="admin@gmail.com",
+            password_hash=generate_password_hash("admin123"),
+            role="ADMIN",
+        )
+
+        db.session.add(admin)
+        db.session.commit()
+
     print("Database created!")

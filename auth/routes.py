@@ -2,8 +2,11 @@ from flask import Blueprint, request, jsonify
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from werkzeug.security import generate_password_hash, check_password_hash
 from models import db, User
+from functools import wraps
 
 auth_bp = Blueprint("auth", __name__)
+
+
 
 
 #  POST /api/auth/register 
@@ -101,3 +104,20 @@ def _user_dict(u):
         "is_active": u.is_active,
         "created_at": str(u.created_at)
     }
+
+
+def admin_required(fn):
+    @wraps(fn)
+    @jwt_required()
+    def wrapper(*args, **kwargs):
+        user = User.query.get(int(get_jwt_identity()))
+
+        if not user:
+            return jsonify({"error": "User not found"}), 404
+
+        if user.role not in ["ADMIN", "SYSTEM_ADMIN"]:
+            return jsonify({"error": "Admin access required"}), 403
+
+        return fn(*args, **kwargs)
+
+    return wrapper
