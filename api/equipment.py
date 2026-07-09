@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from models import db, Equipment, EquipmentServiceLog
 from datetime import date, datetime
-
+from auth.routes import admin_required
 equipment_bp = Blueprint("equipment", __name__)
 
 
@@ -36,7 +36,7 @@ def get_equipment():
 
 # POST /api/equipment  add equipment
 @equipment_bp.route("/", methods=["POST"])
-@jwt_required()
+@admin_required
 def add_equipment():
     user_id = int(get_jwt_identity())
     data = request.get_json()
@@ -61,7 +61,7 @@ def add_equipment():
 
 # PUT /api/equipment/<id>/service  mark serviced today
 @equipment_bp.route("/<int:eid>/service", methods=["PUT"])
-@jwt_required()
+@admin_required
 def mark_serviced(eid):
     user_id = int(get_jwt_identity())
     eq = Equipment.query.get_or_404(eid)
@@ -129,7 +129,7 @@ def get_history(eid):
 
 # DELETE /api/equipment/<id>  delete equipment
 @equipment_bp.route("/<int:eid>", methods=["DELETE"])
-@jwt_required()
+@admin_required
 def delete_equipment(eid):
     eq = Equipment.query.get_or_404(eid)
     db.session.delete(eq)

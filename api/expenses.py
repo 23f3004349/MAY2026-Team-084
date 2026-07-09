@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from models import db, Expense
-
+from auth.routes import admin_required
 expenses_bp = Blueprint("expenses", __name__)
 
 
@@ -15,7 +15,7 @@ def get_expenses():
 
 # POST /api/expenses  log new expense
 @expenses_bp.route("/", methods=["POST"])
-@jwt_required()
+@admin_required
 def add_expense():
     user_id = int(get_jwt_identity())
     data = request.get_json()
@@ -41,7 +41,7 @@ def add_expense():
 
 # PUT /api/expenses/<id>  update expense
 @expenses_bp.route("/<int:exp_id>", methods=["PUT"])
-@jwt_required()
+@admin_required
 def update_expense(exp_id):
     expense = Expense.query.get_or_404(exp_id)
     data = request.get_json()
@@ -55,7 +55,7 @@ def update_expense(exp_id):
 
 # DELETE /api/expenses/<id>  delete expense
 @expenses_bp.route("/<int:exp_id>", methods=["DELETE"])
-@jwt_required()
+@admin_required
 def delete_expense(exp_id):
     expense = Expense.query.get_or_404(exp_id)
     db.session.delete(expense)

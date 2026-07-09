@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from models import db, Invoice, Payment, Apartment, Resident
 from datetime import datetime, date
-
+from auth.routes import admin_required
 invoices_bp = Blueprint("invoices", __name__)
 
 
@@ -28,7 +28,7 @@ def get_invoices():
 
 # POST /api/invoices  generate single invoice
 @invoices_bp.route("/", methods=["POST"])
-@jwt_required()
+@admin_required
 def create_invoice():
     user_id = int(get_jwt_identity())
     data = request.get_json()
@@ -53,7 +53,7 @@ def create_invoice():
 
 # POST /api/invoices/bulk  generate invoices for ALL flats in one click
 @invoices_bp.route("/bulk", methods=["POST"])
-@jwt_required()
+@admin_required
 def bulk_generate():
     user_id = int(get_jwt_identity())
     data = request.get_json()
@@ -96,7 +96,7 @@ def bulk_generate():
 
 # PUT /api/invoices/<id>/pay  mark invoice as paid
 @invoices_bp.route("/<int:inv_id>/pay", methods=["PUT"])
-@jwt_required()
+@admin_required
 def mark_paid(inv_id):
     user_id = int(get_jwt_identity())
     invoice = Invoice.query.get_or_404(inv_id)

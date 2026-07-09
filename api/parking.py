@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from models import db, ParkingSlot
 from datetime import datetime
-
+from auth.routes import admin_required
 parking_bp = Blueprint("parking", __name__)
 
 
@@ -24,7 +24,7 @@ def get_available():
 
 # POST /api/parking  add new parking slot (admin)
 @parking_bp.route("/", methods=["POST"])
-@jwt_required()
+@admin_required
 def add_slot():
     data = request.get_json()
     if not data.get("slot_number"):
@@ -107,7 +107,7 @@ def release_slot(sid):
 
 # DELETE /api/parking/<id>  remove slot
 @parking_bp.route("/<int:sid>", methods=["DELETE"])
-@jwt_required()
+@admin_required
 def delete_slot(sid):
     slot = ParkingSlot.query.get_or_404(sid)
     db.session.delete(slot)

@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from models import db, Announcement
-
+from auth.routes import admin_required
 notices_bp = Blueprint("notices", __name__)
 
 
@@ -16,7 +16,7 @@ def get_notices():
 
 # POST /api/notices  post new notice
 @notices_bp.route("/", methods=["POST"])
-@jwt_required()
+@admin_required
 def add_notice():
     user_id = int(get_jwt_identity())
     data = request.get_json()
@@ -45,7 +45,7 @@ def get_notice(nid):
 
 # PUT /api/notices/<id>  update notice
 @notices_bp.route("/<int:nid>", methods=["PUT"])
-@jwt_required()
+@admin_required
 def update_notice(nid):
     notice = Announcement.query.get_or_404(nid)
     data = request.get_json()
@@ -58,7 +58,7 @@ def update_notice(nid):
 
 # DELETE /api/notices/<id>  soft delete (deactivate)
 @notices_bp.route("/<int:nid>", methods=["DELETE"])
-@jwt_required()
+@admin_required
 def delete_notice(nid):
     notice = Announcement.query.get_or_404(nid)
     notice.is_active = False

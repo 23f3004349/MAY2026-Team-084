@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from models import db, User, Apartment, Resident
 from werkzeug.security import generate_password_hash
-
+from auth.routes import admin_required
 members_bp = Blueprint("members", __name__)
 
 
@@ -12,7 +12,7 @@ members_bp = Blueprint("members", __name__)
 
 # GET /api/members/apartments — list all apartments
 @members_bp.route("/apartments", methods=["GET"])
-@jwt_required()
+@admin_required
 def get_apartments():
     apartments = Apartment.query.all()
     return jsonify([_apt_dict(a) for a in apartments]), 200
@@ -20,7 +20,7 @@ def get_apartments():
 
 # POST /api/members/apartments — add new apartment
 @members_bp.route("/apartments", methods=["POST"])
-@jwt_required()
+@admin_required
 def add_apartment():
     data = request.get_json()
     if not data.get("flat_number"):
@@ -41,7 +41,7 @@ def add_apartment():
 
 # PUT /api/members/apartments/<id>  update apartment
 @members_bp.route("/apartments/<int:apt_id>", methods=["PUT"])
-@jwt_required()
+@admin_required
 def update_apartment(apt_id):
     apt = Apartment.query.get_or_404(apt_id)
     data = request.get_json()
@@ -53,7 +53,7 @@ def update_apartment(apt_id):
 
 # DELETE /api/members/apartments/<id>  delete apartment
 @members_bp.route("/apartments/<int:apt_id>", methods=["DELETE"])
-@jwt_required()
+@admin_required
 def delete_apartment(apt_id):
     apt = Apartment.query.get_or_404(apt_id)
     db.session.delete(apt)
@@ -66,7 +66,7 @@ def delete_apartment(apt_id):
 
 # GET /api/members  list all members with flat info
 @members_bp.route("/", methods=["GET"])
-@jwt_required()
+@admin_required
 def get_members():
     residents = Resident.query.all()
     return jsonify([_resident_dict(r) for r in residents]), 200
@@ -74,7 +74,7 @@ def get_members():
 
 # POST /api/members add new member
 @members_bp.route("/", methods=["POST"])
-@jwt_required()
+@admin_required
 def add_member():
     data = request.get_json()
     required = ["name", "email", "password", "role", "apartment_id"]
@@ -113,7 +113,7 @@ def add_member():
 
 # PUT /api/members/<id>  update member details
 @members_bp.route("/<int:resident_id>", methods=["PUT"])
-@jwt_required()
+@admin_required
 def update_member(resident_id):
     resident = Resident.query.get_or_404(resident_id)
     data = request.get_json()
@@ -134,7 +134,7 @@ def update_member(resident_id):
 
 # DELETE /api/members/<id>  deactivate member
 @members_bp.route("/<int:resident_id>", methods=["DELETE"])
-@jwt_required()
+@admin_required
 def deactivate_member(resident_id):
     resident = Resident.query.get_or_404(resident_id)
     resident.user.is_active = False

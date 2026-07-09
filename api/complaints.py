@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from models import db, Complaint, ComplaintUpdate
 from datetime import datetime
+from auth.routes import admin_required
 
 complaints_bp = Blueprint("complaints", __name__)
 
@@ -60,7 +61,7 @@ def get_complaint(cid):
 
 # PUT /api/complaints/<id>/assign  assign worker
 @complaints_bp.route("/<int:cid>/assign", methods=["PUT"])
-@jwt_required()
+@admin_required
 def assign_complaint(cid):
     c = Complaint.query.get_or_404(cid)
     data = request.get_json()
@@ -81,7 +82,7 @@ def assign_complaint(cid):
 
 # PUT /api/complaints/<id>/status update status
 @complaints_bp.route("/<int:cid>/status", methods=["PUT"])
-@jwt_required()
+@admin_required
 def update_status(cid):
     c = Complaint.query.get_or_404(cid)
     data = request.get_json()
@@ -107,7 +108,7 @@ def update_status(cid):
 
 # DELETE /api/complaints/<id> delete complaint
 @complaints_bp.route("/<int:cid>", methods=["DELETE"])
-@jwt_required()
+@admin_required
 def delete_complaint(cid):
     c = Complaint.query.get_or_404(cid)
     db.session.delete(c)
