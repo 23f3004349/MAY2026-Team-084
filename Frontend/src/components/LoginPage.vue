@@ -126,7 +126,7 @@ async function submit() {
       
       const role = (res.data.user.role || '').toLowerCase()
       if (role === 'admin') router.push('/associate_manager')
-      else router.push('/user_dashboard')
+      else router.push('/tenant-dashboard')
     } else {
       error.value = res.data.message || 'Login failed'
     }
